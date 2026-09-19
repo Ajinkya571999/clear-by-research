@@ -1,0 +1,253 @@
+import { use } from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CheckCircle2, ArrowRight } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
+import ContactForm from "@/components/ContactForm";
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+);
+
+interface ServiceData {
+  slug: string;
+  title: string;
+  category: string;
+  h1: string;
+  introParagraphs: string[];
+  featuresSection: {
+    title: string;
+    intro?: string;
+    list: { title: string; desc: string }[];
+    outro?: string;
+  };
+  subServices?: { title: string; desc: string }[];
+  comparisonSection?: {
+    title: string;
+    data: { feature: string; generic: string; clearby: string }[];
+  };
+  faqs?: { q: string; a: string }[];
+  internalLinks?: { anchor: string; url: string }[];
+  ctaSection: {
+    title: string;
+    text: string;
+    buttonText: string;
+  };
+}
+
+async function getService(slug: string): Promise<ServiceData | null> {
+  const decodedSlug = decodeURIComponent(slug).trim();
+
+  // Exact match query
+  let { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .eq('slug', decodedSlug)
+    .single();
+
+  // Fallback search if exact slug has formatting variants
+  if (error || !data) {
+    const { data: fallbackData } = await supabase
+      .from('services')
+      .select('*')
+      .ilike('slug', `%${decodedSlug}%`)
+      .limit(1);
+
+    if (fallbackData && fallbackData.length > 0) {
+      data = fallbackData[0];
+    }
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    slug: data.slug,
+    title: data.title,
+    category: data.category,
+    h1: data.h1 || data.title,
+    introParagraphs: data.intro_paragraphs || [],
+    featuresSection: data.features_section || { title: "", list: [] },
+    subServices: data.sub_services || [],
+    comparisonSection: data.comparison_section,
+    faqs: data.faqs || [],
+    internalLinks: data.internal_links || [],
+    ctaSection: data.cta_section || { title: "Ready to Get Started?", text: "Connect with our experts today.", buttonText: "Enquire Now" },
+  };
+}
+
+export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const service = await getService(resolvedParams.slug);
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <div className="w-full flex flex-col bg-brand-light text-brand-dark">
+
+      {/* 1. HERO SECTION */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+        <div className="mb-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+          <Link href="/" className="hover:text-brand-purple">Home</Link> <span className="text-brand-gold">›</span> <Link href="/services" className="hover:text-brand-purple">Services</Link> <span className="text-brand-gold">›</span> <span className="text-brand-purple">{service.title}</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7">
+            <span className="text-xs font-bold text-brand-gold uppercase tracking-widest block mb-2">{service.category}</span>
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-brand-purple mb-6 leading-tight">
+              {service.h1}
+            </h1>
+
+            <div className="space-y-4 mb-8 max-w-2xl">
+              {service.introParagraphs.map((para, idx) => (
+                <p key={idx} className="text-gray-600 text-base leading-relaxed">
+                  {para}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <ContactForm variant="hero" />
+          </div>
+        </div>
+      </section>
+
+      {/* 2. CORE FEATURES GRID */}
+      {service.featuresSection && service.featuresSection.list && service.featuresSection.list.length > 0 && (
+        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200">
+          <div className="max-w-7xl mx-auto text-center mb-16">
+            <h2 className="text-3xl font-serif font-bold text-brand-purple mb-3">
+              {service.featuresSection.title}
+            </h2>
+            {service.featuresSection.intro && (
+              <p className="text-gray-600 text-sm max-w-xl mx-auto">{service.featuresSection.intro}</p>
+            )}
+          </div>
+
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {service.featuresSection.list.map((feat, idx) => (
+              <div key={idx} className="bg-brand-light p-8 border border-gray-200 rounded-sm shadow-sm flex items-start gap-4">
+                <CheckCircle2 className="w-6 h-6 text-brand-gold shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-lg font-serif font-bold text-brand-purple mb-2">{feat.title}</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">{feat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {service.featuresSection.outro && (
+            <p className="max-w-3xl mx-auto text-center text-sm text-gray-600 mt-12">
+              {service.featuresSection.outro}
+            </p>
+          )}
+        </section>
+      )}
+
+      {/* 3. SUB-SERVICES */}
+      {service.subServices && service.subServices.length > 0 && (
+        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-light border-t border-gray-200">
+          <div className="max-w-7xl mx-auto text-center mb-16">
+            <h2 className="text-3xl font-serif font-bold text-brand-purple mb-3">Sub-Services</h2>
+          </div>
+
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {service.subServices.map((sub, idx) => (
+              <div key={idx} className="bg-white p-6 border border-gray-200 rounded-sm shadow-sm">
+                <h3 className="font-serif font-bold text-brand-purple mb-2">{sub.title}</h3>
+                <p className="text-xs text-gray-600 leading-relaxed">{sub.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 4. COMPARISON TABLE */}
+      {service.comparisonSection && service.comparisonSection.data && service.comparisonSection.data.length > 0 && (
+        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-purple text-white">
+          <div className="max-w-6xl mx-auto text-center mb-16">
+            <h2 className="text-3xl font-serif font-bold mb-3">{service.comparisonSection.title}</h2>
+            <p className="text-gray-300 text-sm">See how our professional academic advisory compares to generic online alternatives.</p>
+          </div>
+
+          <div className="max-w-5xl mx-auto overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-white/20 text-brand-gold">
+                  <th className="py-4 px-6 uppercase tracking-wider text-xs font-bold">Feature</th>
+                  <th className="py-4 px-6 uppercase tracking-wider text-xs font-bold">Generic Online Services</th>
+                  <th className="py-4 px-6 uppercase tracking-wider text-xs font-bold">E-Clearby Research Consulting</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10 text-xs md:text-sm text-gray-200">
+                {service.comparisonSection.data.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-white/5 transition">
+                    <td className="py-4 px-6 font-bold text-white">{row.feature}</td>
+                    <td className="py-4 px-6 text-gray-400">{row.generic}</td>
+                    <td className="py-4 px-6 text-brand-gold font-semibold">{row.clearby}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* 5. FAQ SECTION */}
+      {service.faqs && service.faqs.length > 0 && (
+        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold text-brand-purple text-center mb-12">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {service.faqs.map((faq, idx) => (
+                <div key={idx} className="border border-gray-200 rounded-sm bg-brand-light p-6">
+                  <h4 className="font-serif font-bold text-brand-purple text-base mb-2">{faq.q}</h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 6. INTERNAL LINKS */}
+      {service.internalLinks && service.internalLinks.length > 0 && (
+        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-light border-t border-gray-200">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold text-brand-purple mb-12 text-center">Supporting Research Services</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {service.internalLinks.map((link, idx) => (
+                <Link
+                  key={idx}
+                  href={link.url}
+                  className="bg-white p-5 border border-gray-200 rounded-sm shadow-sm hover:border-brand-gold transition block"
+                >
+                  <span className="text-sm font-bold text-brand-purple">{link.anchor}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 7. BOTTOM CTA */}
+      <section className="w-full py-20 bg-brand-purple text-white px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{service.ctaSection.title}</h2>
+          <p className="text-gray-300 text-sm max-w-xl mx-auto mb-8 leading-relaxed">
+            {service.ctaSection.text}
+          </p>
+          <a href="#contact" className="bg-brand-gold text-brand-purple font-bold py-3.5 px-8 rounded-sm hover:opacity-90 transition inline-block text-xs uppercase tracking-wider shadow-md">
+            {service.ctaSection.buttonText} <ArrowRight className="inline ml-1 w-4 h-4" />
+          </a>
+        </div>
+      </section>
+
+    </div>
+  );
+}

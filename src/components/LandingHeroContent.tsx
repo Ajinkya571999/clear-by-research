@@ -1,0 +1,1515 @@
+"use client";
+
+import { useEffect } from "react";
+import ContactForm from "@/components/ContactForm";
+
+export default function LandingHeroContent() {
+  useEffect(() => {
+    // FAQ Accordion Handler
+    const faqItems = document.querySelectorAll(".faq-item");
+    faqItems.forEach((item) => {
+      const question = item.querySelector(".faq-q");
+      if (question) {
+        question.addEventListener("click", () => {
+          const isActive = item.classList.contains("active");
+          faqItems.forEach((innerItem) => innerItem.classList.remove("active"));
+          if (!isActive) item.classList.add("active");
+        });
+      }
+    });
+
+    // Smooth Scroll Handler for data-target buttons
+    const handleScroll = (e: Event) => {
+      const target = e.currentTarget as HTMLElement;
+      e.preventDefault();
+      const actionTarget = target.getAttribute("data-target");
+      if (actionTarget) {
+        const targetElement = document.getElementById(actionTarget);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    };
+
+    const buttons = document.querySelectorAll("button[data-target]");
+    buttons.forEach((button) => {
+      button.addEventListener("click", handleScroll);
+    });
+
+    return () => {
+      buttons.forEach((button) => {
+        button.removeEventListener("click", handleScroll);
+      });
+    };
+  }, []);
+
+  return (
+    <>
+      <style jsx global>{`
+        :root {
+          --primary: #2d1a47;
+          --primary-light: #442a66;
+          --accent: #d4af37;
+          --accent-hover: #bda030;
+          --bg: #fdfdfd;
+          --bg-alt: #f6f4f9;
+          --card: #ffffff;
+          --text-main: #1a1a24;
+          --text-muted: #5e5a66;
+          --border: #e2dfeb;
+          --font-serif: 'Playfair Display', Georgia, serif;
+          --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+          --radius-sm: 6px;
+          --radius-md: 12px;
+          --radius-lg: 20px;
+          --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          --shadow-sm: 0 2px 8px rgba(45, 26, 71, 0.04);
+          --shadow-md: 0 10px 30px rgba(45, 26, 71, 0.08);
+        }
+
+        .landing-wrap {
+          font-family: var(--font-sans);
+          background-color: var(--bg);
+          color: var(--text-main);
+          line-height: 1.65;
+        }
+
+        .landing-wrap h1, .landing-wrap h2, .landing-wrap h3, .landing-wrap h4, .landing-wrap h5 {
+          font-family: var(--font-serif);
+          color: var(--primary);
+          font-weight: 700;
+          line-height: 1.25;
+        }
+
+        .landing-wrap p {
+          color: var(--text-muted);
+        }
+
+        .landing-wrap .container {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+
+        .landing-wrap .section {
+          padding: 50px 0;
+        }
+
+        .landing-wrap .section-header {
+          text-align: center;
+          max-width: 700px;
+          margin: 0 auto 60px auto;
+        }
+
+        .landing-wrap .section-header-left {
+          max-width: 700px;
+          margin-bottom: 50px;
+        }
+
+        .landing-wrap .section-header h2, .landing-wrap .section-header-left h2 {
+          font-size: 2.5rem;
+          margin-bottom: 15px;
+        }
+
+        .landing-wrap .rule {
+          width: 60px;
+          height: 4px;
+          background-color: var(--accent);
+          margin: 15px auto 20px auto;
+          border-radius: 2px;
+        }
+
+        .landing-wrap .section-header-left .rule {
+          margin-left: 0;
+        }
+
+        .landing-wrap .btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 14px 28px;
+          font-family: var(--font-sans);
+          font-weight: 600;
+          font-size: 0.95rem;
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          border: 2px solid transparent;
+          transition: var(--transition);
+          text-decoration: none;
+        }
+
+        .landing-wrap .btn-primary {
+          background-color: var(--accent);
+          color: var(--primary) !important;
+        }
+
+        .landing-wrap .btn-primary:hover {
+          background-color: var(--accent-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .landing-wrap .btn-outline {
+          background-color: transparent;
+          border-color: var(--primary);
+          color: var(--primary) !important;
+        }
+
+        .landing-wrap .btn-outline:hover {
+          background-color: var(--primary);
+          color: #ffffff !important;
+          transform: translateY(-2px);
+        }
+
+        /* HERO */
+        .landing-wrap .hero {
+          background: linear-gradient(135deg, var(--bg-alt) 0%, #ffffff 100%);
+          padding: 50px 0 100px 0;
+          overflow: hidden;
+        }
+
+        .landing-wrap .hero-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 60px;
+          align-items: center;
+        }
+
+        .landing-wrap .hero-content {
+          max-width: 580px;
+        }
+
+        .landing-wrap .eyebrow {
+          display: inline-block;
+          font-family: var(--font-sans);
+          font-weight: 600;
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: var(--accent);
+          background-color: var(--primary);
+          padding: 6px 14px;
+          border-radius: 30px;
+          margin-bottom: 24px;
+        }
+
+        .landing-wrap .hero h1 {
+          font-size: 3.5rem;
+          line-height: 1.15;
+          margin-bottom: 20px;
+        }
+
+        .landing-wrap .hero h1 .accent {
+          color: var(--accent);
+          font-style: italic;
+        }
+
+        .landing-wrap .tagline {
+          font-family: var(--font-sans);
+          font-weight: 600;
+          font-size: 1.25rem;
+          color: var(--primary-light);
+          margin-bottom: 12px;
+        }
+
+        .landing-wrap .desc {
+          font-size: 1.1rem;
+          color: var(--text-muted);
+          margin-bottom: 36px;
+        }
+
+        .landing-wrap .hero-actions {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .landing-wrap .hero-image-container {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .landing-wrap .hero-character-img {
+          max-width: 100%;
+          height: auto;
+          filter: drop-shadow(0 20px 30px rgba(45, 26, 71, 0.15));
+          animation: gentle-float 6s ease-in-out infinite;
+        }
+
+        @keyframes gentle-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        /* SERVICES GRID */
+        .landing-wrap .services-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 30px;
+          margin-bottom: 60px;
+        }
+
+        .landing-wrap .service-card {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          padding: 40px 30px;
+          box-shadow: var(--shadow-sm);
+          transition: var(--transition);
+          display: flex;
+          flex-direction: column;
+        }
+
+        .landing-wrap .service-card:hover {
+          transform: translateY(-5px);
+          box-shadow: var(--shadow-md);
+          border-color: var(--accent);
+        }
+
+        .landing-wrap .service-icon-wrap {
+          width: 60px;
+          height: 60px;
+          background-color: var(--bg-alt);
+          color: var(--primary);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 24px;
+          transition: var(--transition);
+        }
+
+        .landing-wrap .service-card:hover .service-icon-wrap {
+          background-color: var(--primary);
+          color: var(--accent);
+        }
+
+        .landing-wrap .service-svg {
+          width: 28px;
+          height: 28px;
+        }
+
+        .landing-wrap .service-card h3 {
+          font-size: 1.35rem;
+          margin-bottom: 18px;
+        }
+
+        .landing-wrap .service-card ul {
+          list-style-type: none;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .landing-wrap .service-card ul li {
+          position: relative;
+          padding-left: 20px;
+          font-size: 0.95rem;
+          color: var(--text-muted);
+        }
+
+        .landing-wrap .service-card ul li::before {
+          content: "•";
+          color: var(--accent);
+          font-weight: bold;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+
+        .landing-wrap .services-cta {
+          text-align: center;
+          background: var(--bg-alt);
+          border-radius: var(--radius-md);
+          padding: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 30px;
+          flex-wrap: wrap;
+        }
+
+        .landing-wrap .services-cta p {
+          font-weight: 600;
+          font-size: 1.1rem;
+          color: var(--primary);
+        }
+
+        /* PROCESS */
+        .landing-wrap .process-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 40px 24px;
+        }
+
+        .landing-wrap .process-step.span-3,
+        .landing-wrap .process-step.span-2 {
+          grid-column: span 3 !important;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .landing-wrap .process-step:not(.span-3):not(.span-2) {
+          grid-column: span 2;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .landing-wrap .process-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+
+        .landing-wrap .process-badge {
+          width: 32px;
+          height: 32px;
+          background: #2A1454;
+          color: #ffffff;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 14px;
+          z-index: 2;
+          flex-shrink: 0;
+        }
+
+        .landing-wrap .process-badge.success-badge {
+          background: #605018;
+        }
+
+        .landing-wrap .process-line {
+          height: 1px;
+          background: #E4E2EC;
+          width: 100%;
+          margin-left: 12px;
+        }
+
+        .landing-wrap .process-card {
+          background: #FFFFFF;
+          border: 1px solid #E4E2EC;
+          border-radius: 8px;
+          padding: 32px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .landing-wrap .process-card:hover {
+          transform: translateY(-5px);
+          box-shadow: var(--shadow-md);
+          border-color: var(--accent);
+        }
+
+        .landing-wrap .process-card h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 20px;
+          color: #2A1454;
+          margin: 0 0 12px 0;
+          font-weight: 700;
+        }
+
+        .landing-wrap .process-card h3.gold-text {
+          color: #8A6E1D;
+        }
+
+        .landing-wrap .process-card p {
+          color: #55525E;
+          font-size: 14px;
+          line-height: 1.6;
+          margin: 0 0 16px 0;
+        }
+
+        .landing-wrap .deliverables-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .landing-wrap .deliverables-list li {
+          font-family: 'Inter', sans-serif;
+          font-size: 13.5px;
+          color: #3B3843;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+        }
+
+        .landing-wrap .deliverables-list svg {
+          width: 16px;
+          height: 16px;
+          color: #2A1454;
+          flex-shrink: 0;
+        }
+
+        .landing-wrap .tag-row {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-top: auto;
+        }
+
+        .landing-wrap .tag {
+          background: #F4F3F7;
+          border: 1px solid #E4E2EC;
+          border-radius: 4px;
+          padding: 4px 10px;
+          font-size: 12px;
+          color: #3B3843;
+        }
+
+        .landing-wrap .divider-line {
+          height: 1px;
+          background: #E4E2EC;
+          margin: 20px 0;
+        }
+
+        .landing-wrap .structure-title {
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          color: #2A1454;
+          margin-bottom: 12px;
+        }
+
+        /* CARD 6 & 7 EXACT */
+        .landing-wrap .card-6-exact {
+          display: flex !important;
+          flex-direction: row !important;
+          gap: 32px;
+          padding: 36px !important;
+        }
+
+        .landing-wrap .card-6-col {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
+
+        .landing-wrap .card-6-col:first-child::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: -16px;
+          width: 1px;
+          height: 100%;
+          background-color: #E8E6ED;
+        }
+
+        .landing-wrap .card-6-col h3, .landing-wrap .card-7-exact h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 22px;
+          color: #1F0D3D;
+          margin-bottom: 12px;
+        }
+
+        .landing-wrap .col-divider, .landing-wrap .section-divider {
+          height: 1px;
+          background: #E8E6ED;
+          margin-bottom: 20px;
+        }
+
+        .landing-wrap .card-6-col p, .landing-wrap .card-7-exact p {
+          color: #595563;
+          font-size: 13.5px;
+          line-height: 1.6;
+          margin-bottom: 28px;
+        }
+
+        .landing-wrap .card-6-exact .gray-box {
+          background: #F4F3F7;
+          border-radius: 6px;
+          padding: 24px 20px;
+          margin-top: auto;
+        }
+
+        .landing-wrap .box-label {
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          color: #1F0D3D;
+          margin-bottom: 16px;
+          text-transform: uppercase;
+        }
+
+        .landing-wrap .analyses-flex {
+          display: flex;
+          gap: 20px;
+        }
+
+        .landing-wrap .analyses-flex > div {
+          flex: 1;
+        }
+
+        .landing-wrap .analyses-flex h5 {
+          font-size: 13px;
+          font-weight: 700;
+          color: #1F0D3D;
+          margin: 0;
+        }
+
+        .landing-wrap .sub-line {
+          height: 1px;
+          background: #DDDCE3;
+          margin: 6px 0 12px 0;
+        }
+
+        .landing-wrap .card-6-exact ul {
+          list-style: none !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
+        .landing-wrap .card-6-exact li {
+          font-size: 11.5px;
+          color: #4A4654;
+          line-height: 1.5;
+          margin-bottom: 6px;
+          position: relative;
+          padding-left: 10px;
+        }
+
+        .landing-wrap .card-6-exact li::before {
+          content: "•";
+          position: absolute;
+          left: 0;
+          color: #4A4654;
+        }
+
+        .landing-wrap .card-7-exact {
+          padding: 36px !important;
+        }
+
+        .landing-wrap .chapter-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .landing-wrap .ch-row {
+          display: flex;
+          background: #F8F7FA;
+          border-radius: 6px;
+          padding: 12px 16px;
+          font-size: 13px;
+          align-items: center;
+        }
+
+        .landing-wrap .ch-row strong {
+          width: 55px;
+          color: #1F0D3D;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+
+        .landing-wrap .ch-row span {
+          color: #4A4654;
+        }
+
+        /* DOMAIN EXPERTISE */
+        .landing-wrap #research-areas {
+          background: #FFFFFF;
+          padding: 80px 0;
+        }
+
+        .landing-wrap .domain-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
+        }
+
+        .landing-wrap .domain-card {
+          background: #FFFFFF;
+          border: 1px solid #E4E2EC;
+          border-radius: 6px;
+          padding: 36px 30px;
+          display: flex;
+          flex-direction: column;
+          transition: all 0.3s ease;
+        }
+
+        .landing-wrap .domain-card:hover {
+          border-color: #C5BFD4;
+          box-shadow: 0 6px 18px rgba(42, 20, 84, 0.04);
+        }
+
+        .landing-wrap .domain-svg {
+          width: 32px;
+          height: 32px;
+          color: #2A1454;
+          stroke-width: 1.8px;
+        }
+
+        .landing-wrap .domain-body h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 22px;
+          color: #2A1454;
+          font-weight: 700;
+          margin: 0 0 20px 0;
+        }
+
+        .landing-wrap .domain-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .landing-wrap .domain-list li {
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          color: #4E4A59;
+          line-height: 1.4;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .landing-wrap .domain-list li::before {
+          content: "";
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          background-color: #8A6E1D;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        /* FAQ ACCORDION */
+        .landing-wrap .faq-wrap {
+          max-width: 800px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .landing-wrap .faq-item {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-sm);
+          overflow: hidden;
+          transition: var(--transition);
+        }
+
+        .landing-wrap .faq-q {
+          padding: 22px 28px;
+          font-size: 1.05rem;
+          font-weight: 600;
+          color: var(--primary);
+          cursor: pointer;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          user-select: none;
+          transition: var(--transition);
+        }
+
+        .landing-wrap .faq-q:hover {
+          background-color: var(--bg-alt);
+        }
+
+        .landing-wrap .chev {
+          font-size: 1.2rem;
+          transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          color: var(--accent);
+        }
+
+        .landing-wrap .faq-a {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+          background-color: #faf9fc;
+        }
+
+        .landing-wrap .faq-a p {
+          padding: 0 28px 24px 28px;
+          font-size: 0.95rem;
+          color: var(--text-muted);
+          line-height: 1.6;
+        }
+
+        .landing-wrap .faq-item.active {
+          border-color: var(--accent);
+          box-shadow: var(--shadow-sm);
+        }
+
+        .landing-wrap .faq-item.active .chev {
+          transform: rotate(180deg);
+        }
+
+        .landing-wrap .faq-item.active .faq-a {
+          max-height: 1000px;
+          transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
+        }
+
+        /* TRUST MATRIX */
+        .landing-wrap .trust-form-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 60px;
+          align-items: start;
+        }
+
+        .landing-wrap .trust-item {
+          display: flex;
+          gap: 18px;
+          align-items: flex-start;
+          margin-bottom: 24px;
+        }
+
+        .landing-wrap .trust-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background-color: var(--primary);
+          color: var(--accent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .landing-wrap .trust-icon svg { width: 22px; height: 22px; }
+        .landing-wrap .trust-item h4 {
+          font-family: var(--font-sans);
+          font-size: 1.05rem;
+          font-weight: 600;
+          color: var(--primary);
+          margin-bottom: 4px;
+        }
+        .landing-wrap .trust-item p { font-size: 0.9rem; }
+        
+        .landing-wrap .trust-form-container {
+          background: #ffffff;
+          border: 1px solid var(--border);
+          padding: 32px;
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-md);
+        }
+
+        /* ACADEMIC INTEGRITY STATEMENT */
+        .landing-wrap .integrity-section {
+          background: var(--primary);
+          padding: 70px 0;
+        }
+
+        .landing-wrap .integrity-inner {
+          max-width: 820px;
+          margin: 0 auto;
+          text-align: center;
+        }
+
+        .landing-wrap .integrity-inner h2 {
+          color: #ffffff;
+          font-size: 2rem;
+          margin-bottom: 14px;
+        }
+
+        .landing-wrap .integrity-inner .rule {
+          background-color: var(--accent);
+        }
+
+        .landing-wrap .integrity-inner > p {
+          color: #d8d2e4;
+          font-size: 1.05rem;
+          margin-bottom: 40px;
+        }
+
+        .landing-wrap .integrity-columns {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          text-align: left;
+        }
+
+        .landing-wrap .integrity-card {
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: var(--radius-md);
+          padding: 28px 26px;
+        }
+
+        .landing-wrap .integrity-card h4 {
+          font-family: var(--font-sans);
+          font-size: 1rem;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+        }
+
+        .landing-wrap .integrity-card.do h4 { color: var(--accent); }
+        .landing-wrap .integrity-card.dont h4 { color: #e8a3a3; }
+
+        .landing-wrap .integrity-card ul {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .landing-wrap .integrity-card li {
+          color: #eae7f0;
+          font-size: 0.95rem;
+          line-height: 1.5;
+          padding-left: 24px;
+          position: relative;
+        }
+
+        .landing-wrap .integrity-card.do li::before {
+          content: "✓";
+          position: absolute;
+          left: 0;
+          color: var(--accent);
+          font-weight: 700;
+        }
+
+        .landing-wrap .integrity-card.dont li::before {
+          content: "✕";
+          position: absolute;
+          left: 0;
+          color: #e8a3a3;
+          font-weight: 700;
+        }
+
+        @media (max-width: 992px) {
+          .landing-wrap .hero-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+          .landing-wrap .hero-actions { justify-content: center; }
+          .landing-wrap .hero-image-container { max-width: 400px; margin: 0 auto; }
+          .landing-wrap .trust-form-grid { grid-template-columns: 1fr; gap: 40px; }
+          .landing-wrap .process-grid { grid-template-columns: 1fr; gap: 24px; }
+          .landing-wrap .process-step, .landing-wrap .process-step.span-3, .landing-wrap .process-step.span-2 { grid-column: span 1 !important; }
+          .landing-wrap .card-6-exact { flex-direction: column !important; }
+          .landing-wrap .domain-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 700px) {
+          .landing-wrap .integrity-columns { grid-template-columns: 1fr; }
+          .landing-wrap .domain-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
+
+      <div className="landing-wrap">
+        {/* HERO */}
+        <section className="hero">
+          <div className="container hero-grid">
+            <div className="hero-content">
+              <span className="eyebrow">🎓 Accredited PhD Research Mentorship</span>
+              <h1>
+                Comprehensive <span className="accent">PhD</span> Thesis Support and <span className="accent">Guidance</span>
+              </h1>
+              <p className="tagline">PhD Thesis Guidance & Research Support.</p>
+              <p className="desc">
+                Guiding scholars with comprehensive academic mentorship, from conceptualizing frameworks to high-impact journal publications — every step remains your own work.
+              </p>
+              <div className="hero-actions">
+                <button data-target="enquiry" className="btn btn-primary">
+                  Consult with Experts
+                </button>
+                <button data-target="services" className="btn btn-outline">
+                  View Services
+                </button>
+              </div>
+            </div>
+            <div className="hero-image-container">
+              <img
+                src="https://static.wixstatic.com/media/480369_bc4b11b6be144232a25dab3d15f4ec7f~mv2.png"
+                alt="Doctoral Researcher Mentorship"
+                className="hero-character-img"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICES */}
+        <section className="section" id="services">
+          <div className="container">
+            <div className="section-header">
+              <h2>Our PhD Research Guidance and Support</h2>
+              <div className="rule"></div>
+              <p>End-to-end guidance and consultation from topic selection to final submission.</p>
+            </div>
+
+            <div className="services-grid">
+              <div className="service-card">
+                <div className="service-icon-wrap">
+                  <svg className="service-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                </div>
+                <h3>Research Planning</h3>
+                <ul>
+                  <li>PhD Topic Consultation</li>
+                  <li>Research Proposal Guidance</li>
+                  <li>Research Gap Identification Support</li>
+                  <li>Concept Paper Consultation</li>
+                </ul>
+              </div>
+
+              <div className="service-card">
+                <div className="service-icon-wrap">
+                  <svg className="service-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                    <polyline points="2 17 12 22 22 17" />
+                    <polyline points="2 12 12 17 22 12" />
+                  </svg>
+                </div>
+                <h3>Review &amp; Frameworks</h3>
+                <ul>
+                  <li>Systematic Literature Review Guidance (SLR)</li>
+                  <li>PRISMA-based Review Consultation</li>
+                  <li>Theoretical Framework Guidance</li>
+                  <li>Conceptual Framework Guidance</li>
+                </ul>
+              </div>
+
+              <div className="service-card">
+                <div className="service-icon-wrap">
+                  <svg className="service-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M6 3h12M12 3v7M9 14h6M4 21h16c0-4-3-7-8-7s-8 3-8 7z" />
+                  </svg>
+                </div>
+                <h3>Methodology &amp; Data</h3>
+                <ul>
+                  <li>Questionnaire Design Consultation</li>
+                  <li>Pilot Study Support</li>
+                  <li>Data Collection Strategy Guidance</li>
+                  <li>Statistical Analysis Training &amp; Support</li>
+                </ul>
+              </div>
+
+              <div className="service-card">
+                <div className="service-icon-wrap">
+                  <svg className="service-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5" />
+                  </svg>
+                </div>
+                <h3>Publication &amp; Submission</h3>
+                <ul>
+                  <li>Research Paper Guidance</li>
+                  <li>Scopus Publication Support</li>
+                  <li>Journal Selection Assistance</li>
+                  <li>Viva Preparation Coaching</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="services-cta">
+              <p>Not sure which service you need? Talk to our research consultant</p>
+              <button data-target="custom-blank-section" className="btn btn-primary">
+                Consult with Experts
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* PROCESS */}
+        <section className="section" id="process" style={{ background: "var(--card)" }}>
+          <div className="container">
+            <div className="section-header">
+              <h2>Our PhD Thesis Process</h2>
+              <div className="rule"></div>
+              <p>A Concise 4-Stage Workflow for Academic Excellence</p>
+            </div>
+
+            <div className="process-grid">
+              {/* Step 1 */}
+              <div className="process-step span-3">
+                <div className="process-header">
+                  <div className="process-badge">1</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Initial Research Consultation</h3>
+                  <p>Personalized session to align your research goals with academic standards and feasibility.</p>
+                  <div className="divider-line" style={{ margin: "12px 0" }}></div>
+                  <div className="structure-title">KEY DELIVERABLES</div>
+                  <ul className="deliverables-list">
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Detailed Requirement Assessment
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Research Feasibility Evaluation
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Customized Timeline & Milestone Planning
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="process-step span-3">
+                <div className="process-header">
+                  <div className="process-badge">2</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Topic Selection & Research Gap Identification</h3>
+                  <p>Identifying a unique niche is critical for PhD success. We assist in reviewing current literature to spot unexplored areas, ensuring your research contributes meaningfully to your field of study.</p>
+                  <div className="divider-line" style={{ margin: "12px 0" }}></div>
+                  <div className="structure-title">KEY DELIVERABLES</div>
+                  <ul className="deliverables-list list-alt">
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                      Refined & Validated Research Topic
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                      Formal Problem Statement
+                    </li>
+                    <li>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                      Strategic Research Objectives & Questions
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="process-step">
+                <div className="process-header">
+                  <div className="process-badge">3</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Research Proposal Development</h3>
+                  <p>Crafting a robust proposal that outlines your research roadmap for committee approval.</p>
+                  <div className="tag-row">
+                    <span className="tag">Structured Proposal</span>
+                    <span className="tag">Objectives</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="process-step">
+                <div className="process-header">
+                  <div className="process-badge">4</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Literature Review</h3>
+                  <p>Comprehensive synthesis of existing scholarship using high-impact database searches.</p>
+                  <div className="tag-row">
+                    <span className="tag">Scopus/WoS Search</span>
+                    <span className="tag">Gap Analysis</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5 */}
+              <div className="process-step">
+                <div className="process-header">
+                  <div className="process-badge">5</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Research Methodology Design</h3>
+                  <p>Designing rigorous qualitative or quantitative frameworks for valid data collection.</p>
+                  <div className="tag-row">
+                    <span className="tag">Design Protocols</span>
+                    <span className="tag">Sampling Plan</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 6 */}
+              <div className="process-step span-2">
+                <div className="process-header">
+                  <div className="process-badge">6</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card card-6-exact">
+                  <div className="card-6-col">
+                    <h3>Data Analysis Support</h3>
+                    <div className="col-divider"></div>
+                    <p>Expert guidance through complex statistical software including SPSS, AMOS, SmartPLS, and NVivo. We transform raw data into scholarly insights with high precision.</p>
+                    <div className="gray-box">
+                      <div className="box-label">COMMON ANALYSES INCLUDE</div>
+                      <div className="analyses-flex">
+                        <div>
+                          <h5>Quantitative</h5>
+                          <div className="sub-line"></div>
+                          <ul>
+                            <li>Descriptive Statistics</li>
+                            <li>Reliability & Validity Analysis</li>
+                            <li>EFA / CFA</li>
+                            <li>Structural Equation Modeling (SEM)</li>
+                            <li>Regression Analysis</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5>Qualitative</h5>
+                          <div className="sub-line"></div>
+                          <ul>
+                            <li>Thematic Analysis</li>
+                            <li>Content Analysis</li>
+                            <li>Case Study Mapping</li>
+                            <li>Grounded Theory Coding</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="card-6-col">
+                    <h3>Technical Implementation</h3>
+                    <div className="col-divider"></div>
+                    <p>Provides top-notch implementation and simulation services to help you effectively execute and refine your research projects.</p>
+                    <div className="gray-box">
+                      <div className="box-label">COMMON TECHNICAL TOOLS</div>
+                      <ul>
+                        <li>Python</li>
+                        <li>METLAB</li>
+                        <li>NS2/NS3</li>
+                        <li>Ansys</li>
+                        <li>Java</li>
+                        <li>Cadence</li>
+                        <li>CloudSim</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 7 */}
+              <div className="process-step span-2">
+                <div className="process-header">
+                  <div className="process-badge">7</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card card-7-exact">
+                  <h3>Thesis (Generic Chapter Plan)</h3>
+                  <p>We provide ongoing research guidance, focusing on one chapter at a time to ensure logical flow, academic tone, and rigorous argumentation across the entire document.</p>
+                  <div className="section-divider"></div>
+                  <div className="box-label">TYPICAL STRUCTURE</div>
+                  <div className="chapter-list">
+                    <div className="ch-row"><strong>Ch. 1</strong> <span>Introduction & Context</span></div>
+                    <div className="ch-row"><strong>Ch. 2</strong> <span>Critical Literature Review</span></div>
+                    <div className="ch-row"><strong>Ch. 3</strong> <span>Research Methodology</span></div>
+                    <div className="ch-row"><strong>Ch. 4</strong> <span>Data Analysis & Findings</span></div>
+                    <div className="ch-row"><strong>Ch. 5</strong> <span>Discussion & Interpretation</span></div>
+                    <div className="ch-row"><strong>Ch. 6</strong> <span>Conclusion & Policy Recommendations</span></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 8 */}
+              <div className="process-step span-2">
+                <div className="process-header">
+                  <div className="process-badge">8</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3>Editing, Proofreading &amp; Formatting</h3>
+                  <p>Final refinement of the manuscript for clarity, consistency, and strict adherence to citation styles such as APA, Harvard, MLA, or Chicago, ensuring your work is submission-ready.</p>
+                </div>
+              </div>
+
+              {/* Step Check */}
+              <div className="process-step span-2">
+                <div className="process-header">
+                  <div className="process-badge success-badge">✓</div>
+                  <div className="process-line"></div>
+                </div>
+                <div className="process-card">
+                  <h3 className="gold-text">Final Review &amp; Viva Support</h3>
+                  <p>Preparation for the final defense. We provide guidance on anticipated Viva questions, presentation strategies, and a comprehensive final review of the complete thesis.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DOMAIN EXPERTISE */}
+        <section className="section" id="research-areas">
+          <div className="container">
+            <div className="section-header-left">
+              <h2>Domain Expertise</h2>
+              <div className="rule"></div>
+            </div>
+
+            <div className="domain-grid">
+              <div className="domain-card">
+                <div className="domain-icon-wrap">
+                  <svg className="domain-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                    <path d="M10 9.5l2-2 2 2M14 11.5l-2 2-2-2" />
+                  </svg>
+                </div>
+                <div className="domain-body">
+                  <h3>Engineering &amp; Technology</h3>
+                  <ul className="domain-list">
+                    <li>Computer Science</li>
+                    <li>Electronics</li>
+                    <li>Civil &amp; Mechanical</li>
+                    <li>AI &amp; Data Science</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="domain-card">
+                <div className="domain-icon-wrap">
+                  <svg className="domain-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <div className="domain-body">
+                  <h3>Social Sciences &amp; Management</h3>
+                  <ul className="domain-list">
+                    <li>ESG &amp; Sustainability</li>
+                    <li>Human Resource Management</li>
+                    <li>Marketing &amp; Finance</li>
+                    <li>Law &amp; Public Policy</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="domain-card">
+                <div className="domain-icon-wrap">
+                  <svg className="domain-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4.5 10.5C4.5 7.46 7.46 4.5 10.5 4.5S16.5 7.46 16.5 10.5c0 4.5-6 9-6 9s-6-4.5-6-9z" />
+                    <circle cx="10.5" cy="10.5" r="3" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10" />
+                  </svg>
+                </div>
+                <div className="domain-body">
+                  <h3>Life Science</h3>
+                  <ul className="domain-list">
+                    <li>Molecular Zoology</li>
+                    <li>Animal &amp; Plant Physiology</li>
+                    <li>Taxonomy &amp; Biodiversity</li>
+                    <li>Botany Research</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="section" id="faq" style={{ background: "var(--bg-alt, #f9f9f9)" }}>
+          <div className="container">
+            <div className="section-header">
+              <h2>Frequently Asked Questions</h2>
+              <div className="rule"></div>
+            </div>
+            <div className="faq-wrap" id="faqWrap">
+              <div className="faq-item">
+                <div className="faq-q">What Does PhD Thesis Guidance Include?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Our PhD thesis support includes guidance on developing a structured thesis plan, conducting and reviewing literature, selecting appropriate research methodology, understanding data analysis, organizing chapters, academic editing and formatting, plagiarism and similarity review, and preparing for the viva.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">What information do I need to provide to get started?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>You'll need to share your research topic, research proposal, and details of the requirement, university formatting guidelines, any data already collected, and relevant notes or literature you've gathered. This lets our expert scope the project accurately before writing begins.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Do you deliver original and plagiarism-free content?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. All research documents are developed specifically for your project based on your research objectives, methodology, and data. Before delivery, the content undergoes originality checks to help ensure academic integrity, and a plagiarism report can be provided upon request.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Do you follow my University's formatting guidelines?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. We follow your institution's specified guidelines and the content follows citation style (APA, MLA, Harvard, IEEE, or Chicago) and chapter structure exactly as required.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Can I request revisions after a chapter is delivered?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. Revisions are included as long as your original topic and research scope remain unchanged, you can refine chapters without additional cost.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Do you provide only data analysis support for the thesis?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. Scholars can choose chapter-wise or service-specific support, including SPSS analysis, AMOS SEM, SmartPLS, NVivo thematic analysis, and interpretation of results.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Which software do you use for PhD data analysis?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>We provide analysis support using SPSS, AMOS, SmartPLS, STATA, R, Python, EViews, MATLAB, and NVivo.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Do you support international PhD scholars?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. We provide research support for scholars from India, the UK, UAE, Australia, Canada, Europe, and other countries, following university-specific guidelines.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Is my research kept confidential?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Absolutely. All research discussions, documents, datasets, and communications are handled with strict confidentiality and professional ethics.</p>
+                </div>
+              </div>
+
+              <div className="faq-item">
+                <div className="faq-q">Can you help with Scopus or WOS publication?<span className="chev">⌄</span></div>
+                <div className="faq-a">
+                  <p>Yes. We provide guidance on journal selection, manuscript preparation, and submission strategy for Scopus-indexed and Web of Science journals.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ACADEMIC INTEGRITY STATEMENT */}
+        <section className="integrity-section" id="academic-integrity">
+          <div className="container integrity-inner">
+            <h2>Academic Integrity Commitment</h2>
+            <div className="rule"></div>
+            <p>Clearby Research provides guidance, consultation, and academic support to help researchers develop their work independently. Researchers remain responsible for their submissions, including the research, analysis, interpretation, and final written content.</p>
+
+            <div className="integrity-columns">
+              <div className="integrity-card do">
+                <h4>You Always</h4>
+                <ul>
+                  <li>Conduct your own research</li>
+                  <li>Write your own work</li>
+                  <li>Properly attribute all sources</li>
+                  <li>Follow your institution's academic integrity policies</li>
+                  <li>Disclose external guidance to your advisor as required</li>
+                </ul>
+              </div>
+              <div className="integrity-card dont">
+                <h4>We Never</h4>
+                <ul>
+                  <li>Write dissertations, thesis, or assignments for you</li>
+                  <li>Remove or conceal plagiarism</li>
+                  <li>Help bypass institutional academic standards</li>
+                  <li>Produce work intended to deceive your institution</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TRUST + ENQUIRY SECTION */}
+        <section className="section" id="enquiry">
+          <div className="container trust-form-grid">
+            <div className="trust-content-left">
+              <h2 style={{ marginBottom: "28px" }}>Why Scholars Trust Clearby Research</h2>
+               
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>PhD Qualified Mentors</h4>
+                  <p>Work directly with subject-matter experts who hold doctoral degrees.</p>
+                </div>
+              </div>
+
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Timely Deliverables</h4>
+                  <p>Strict adherence to academic deadlines and university timelines.</p>
+                </div>
+              </div>
+
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Confidential Integrity</h4>
+                  <p>Your intellectual property is protected by strict NDAs.</p>
+                </div>
+              </div>
+
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Plagiarism Verification</h4>
+                  <p>Turnitin reports provided with every final document.</p>
+                </div>
+              </div>
+
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12 3 7.582 7.03 4 12 4s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Unlimited Revisions</h4>
+                  <p>Continuous support until your supervisor provides approval.</p>
+                </div>
+              </div>
+
+              <div className="trust-item">
+                <div className="trust-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7 7 7M12 3v18" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Journal Indexing</h4>
+                  <p>Strategic guidance for Scopus, WoS, and IEEE publications.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Replaced Inline Form with the Reusable ContactForm Component */}
+            <div className="trust-form-container">
+              <ContactForm variant="hero" />
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </>
+  );
+}

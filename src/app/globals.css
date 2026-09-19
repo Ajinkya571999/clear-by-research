@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F8F9FA; /* Brand Light */
+  --foreground: #1A1A1A; /* Brand Dark */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Clearby Research Brand Colors */
+  --color-brand-purple: #2E1A47;
+  --color-brand-gold: #B89047;
+  --color-brand-light: #F8F9FA;
+  --color-brand-dark: #1A1A1A;
+
+  /* Typography mapped from layout.tsx */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Optional dark mode defaults */
+    --background: #1A1A1A;
+    --foreground: #F8F9FA;
+  }
+}
+
+/* We removed the body{} block here because your layout.tsx handles the background and font-family using Tailwind classes */
