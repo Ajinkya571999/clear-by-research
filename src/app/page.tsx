@@ -193,10 +193,10 @@ export default function HomePage() {
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="bg-white p-8 border border-gray-200 shadow-sm hover:shadow-xl transition rounded-sm flex flex-col justify-between"
             >
-              <div>
-                <div className="w-10 h-10 bg-brand-light text-brand-gold flex items-center justify-center rounded mb-6 font-bold text-lg">
+              <div>{/* <div className="w-10 h-10 bg-brand-light text-brand-gold flex items-center justify-center rounded mb-6 font-bold text-lg">
                   {srv.icon || "💡"}
-                </div>
+                </div> */}
+                
                 <h3 className="text-xl font-serif font-bold text-brand-purple mb-3">{srv.title}</h3>
                 <p className="text-xs text-gray-600 mb-6 leading-relaxed">{srv.desc}</p>
               </div>

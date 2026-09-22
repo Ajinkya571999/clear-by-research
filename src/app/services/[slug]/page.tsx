@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import ContactForm from "@/components/ContactForm";
+import FaqAccordion from "@/components/FaqAccordion";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -13,6 +14,7 @@ const supabase = createClient(
 interface ServiceData {
   slug: string;
   title: string;
+  subMenu?: string;
   category: string;
   h1: string;
   introParagraphs: string[];
@@ -66,6 +68,7 @@ async function getService(slug: string): Promise<ServiceData | null> {
   return {
     slug: data.slug,
     title: data.title,
+    subMenu: data.sub_menu,
     category: data.category,
     h1: data.h1 || data.title,
     introParagraphs: data.intro_paragraphs || [],
@@ -86,13 +89,15 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
+  const breadcrumbLabel = service.subMenu || service.h1 || service.title;
+
   return (
     <div className="w-full flex flex-col bg-brand-light text-brand-dark">
 
       {/* 1. HERO SECTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
         <div className="mb-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">
-          <Link href="/" className="hover:text-brand-purple">Home</Link> <span className="text-brand-gold">›</span> <Link href="/services" className="hover:text-brand-purple">Services</Link> <span className="text-brand-gold">›</span> <span className="text-brand-purple">{service.title}</span>
+          <Link href="/" className="hover:text-brand-purple">Home</Link> <span className="text-brand-gold">›</span> <Link href="/services" className="hover:text-brand-purple">Services</Link> <span className="text-brand-gold">›</span> <span className="text-brand-purple">{breadcrumbLabel}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -198,22 +203,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* 5. FAQ SECTION */}
-      {service.faqs && service.faqs.length > 0 && (
-        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-brand-purple text-center mb-12">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {service.faqs.map((faq, idx) => (
-                <div key={idx} className="border border-gray-200 rounded-sm bg-brand-light p-6">
-                  <h4 className="font-serif font-bold text-brand-purple text-base mb-2">{faq.q}</h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">{faq.a}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* 5. FAQ SECTION (INTERACTIVE DROPDOWN ACCORDION) */}
+      <FaqAccordion faqs={service.faqs} />
 
       {/* 6. INTERNAL LINKS */}
       {service.internalLinks && service.internalLinks.length > 0 && (
@@ -221,7 +212,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-serif font-bold text-brand-purple mb-12 text-center">Supporting Research Services</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {service.internalLinks.map((link, idx) => (
+              {service.internalLinks.map((link: any, idx: number) => (
                 <Link
                   key={idx}
                   href={link.url}

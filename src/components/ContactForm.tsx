@@ -1,36 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+);
 
 interface ServiceItem {
-  slug?: string;
-  title?: string;
-  h1?: string;
+  sub_menu?: string;
+  menu_order?: number;
 }
 
 interface ContactFormProps {
   variant?: "hero" | "contact";
-  services?: ServiceItem[];
 }
 
-export default function ContactForm({ variant = "hero", services = [] }: ContactFormProps) {
+export default function ContactForm({ variant = "hero" }: ContactFormProps) {
   const router = useRouter();
+  const [subMenuOptions, setSubMenuOptions] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     countryCode: "+91",
     phone: "",
     email: "",
-    service: services[0]?.h1 || services[0]?.title || "PhD Topic Consultation",
+    service: "",
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+
+  // Fetch sub_menu data ordered by menu_order from Supabase on mount
+  useEffect(() => {
+    async function fetchSubMenu() {
+      const { data, error } = await supabase
+        .from('services')
+        .select('sub_menu, menu_order')
+        .order('menu_order', { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        const options: string[] = [];
+
+        data.forEach((item: ServiceItem) => {
+          if (item.sub_menu && !options.includes(item.sub_menu)) {
+            options.push(item.sub_menu);
+          }
+        });
+
+        setSubMenuOptions(options);
+
+        if (options.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            service: options[0],
+          }));
+        }
+      }
+    }
+
+    fetchSubMenu();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
 
-    // Combine country code and phone number before sending
     const submissionData = {
       ...formData,
       phone: `${formData.countryCode} ${formData.phone}`,
@@ -44,7 +79,6 @@ export default function ContactForm({ variant = "hero", services = [] }: Contact
       });
 
       if (response.ok) {
-        // Redirect to the native Next.js thank you page
         router.push("/thank-you");
       } else {
         setStatus("error");
@@ -96,14 +130,11 @@ export default function ContactForm({ variant = "hero", services = [] }: Contact
             <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Select Services</label>
             <select name="service" value={formData.service} onChange={handleChange} className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-brand-purple rounded-sm bg-white text-gray-700">
               <option value="" disabled>Select a service...</option>
-              {services.map((item, index) => {
-                const displayValue = item.h1 || item.title;
-                return (
-                  <option key={index} value={displayValue}>
-                    {displayValue}
-                  </option>
-                );
-              })}
+              {subMenuOptions.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -156,14 +187,11 @@ export default function ContactForm({ variant = "hero", services = [] }: Contact
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Enquiry Service</label>
             <select name="service" value={formData.service} onChange={handleChange} className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-brand-purple rounded-sm bg-white text-gray-700">
-              {services.map((item, index) => {
-                const displayValue = item.h1 || item.title;
-                return (
-                  <option key={index} value={displayValue}>
-                    {displayValue}
-                  </option>
-                );
-              })}
+              {subMenuOptions.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
           </div>
         </div>

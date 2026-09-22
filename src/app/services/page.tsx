@@ -10,7 +10,8 @@ const supabase = createClient(
 async function getServices() {
   const { data, error } = await supabase
     .from('services')
-    .select('slug, title, category, h1, intro_paragraphs');
+    .select('slug, title, sub_menu, category, h1, intro_paragraphs, menu_order')
+    .order('menu_order', { ascending: true }); // Orders services by your database menu_order sequence
 
   if (error || !data) {
     console.error("Error fetching services:", error);
@@ -19,7 +20,7 @@ async function getServices() {
 
   return data.map((item: any) => ({
     slug: item.slug,
-    title: item.h1 || item.title,
+    title: item.sub_menu || item.h1 || item.title,
     category: item.category || "General",
     desc: item.intro_paragraphs?.[0] || "Professional academic advisory service tailored to your research milestone.",
   }));
@@ -49,7 +50,7 @@ export default async function ServicesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-10 border border-gray-100 shadow-sm rounded-sm">
             <h3 className="text-2xl font-serif font-bold text-brand-purple mb-4 flex items-center gap-3">
-              <span className="text-brand-gold">⟡</span> Consulting & Mentorship
+              Consulting & Mentorship
             </h3>
             <p className="text-gray-600 text-sm mb-6 leading-relaxed">
               Strategic guidance designed to build your research capacity. We provide high-level mentorship on theoretical frameworks, methodological choices, and academic planning.
@@ -62,7 +63,7 @@ export default async function ServicesPage() {
           </div>
           <div className="bg-white p-10 border border-gray-100 shadow-sm rounded-sm">
             <h3 className="text-2xl font-serif font-bold text-brand-purple mb-4 flex items-center gap-3">
-              <span className="text-brand-gold">⟡</span> Hands-on Support
+              Hands-on Support
             </h3>
             <p className="text-gray-600 text-sm mb-6 leading-relaxed">
               Tactical execution and structured support. Our team assists with data processing, formatting to university standards, and structural editing for international publication.

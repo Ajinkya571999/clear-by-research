@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
 
 // Load the modern Sans font for body text
 const inter = Inter({
@@ -31,10 +32,14 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-brand-light text-brand-dark font-sans">
+      <body 
+        className="min-h-full flex flex-col bg-brand-light text-brand-dark font-sans"
+        suppressHydrationWarning={true}
+      >
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
+        <BackToTop />
       </body>
     </html>
   );

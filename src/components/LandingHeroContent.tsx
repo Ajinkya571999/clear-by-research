@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import ContactForm from "@/components/ContactForm";
 
 export default function LandingHeroContent() {
@@ -72,6 +72,7 @@ export default function LandingHeroContent() {
           background-color: var(--bg);
           color: var(--text-main);
           line-height: 1.65;
+          overflow-x: hidden;
         }
 
         .landing-wrap h1, .landing-wrap h2, .landing-wrap h3, .landing-wrap h4, .landing-wrap h5 {
@@ -89,11 +90,11 @@ export default function LandingHeroContent() {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0 20px;
         }
 
         .landing-wrap .section {
-          padding: 50px 0;
+          padding: 60px 0;
         }
 
         .landing-wrap .section-header {
@@ -165,39 +166,40 @@ export default function LandingHeroContent() {
         /* HERO */
         .landing-wrap .hero {
           background: linear-gradient(135deg, var(--bg-alt) 0%, #ffffff 100%);
-          padding: 50px 0 100px 0;
+          padding: 40px 0 60px 0;
           overflow: hidden;
         }
 
         .landing-wrap .hero-grid {
           display: grid;
           grid-template-columns: 1.1fr 0.9fr;
-          gap: 60px;
+          gap: 40px;
           align-items: center;
         }
 
         .landing-wrap .hero-content {
           max-width: 580px;
+          width: 100%;
         }
 
         .landing-wrap .eyebrow {
           display: inline-block;
           font-family: var(--font-sans);
           font-weight: 600;
-          font-size: 0.85rem;
+          font-size: 0.75rem;
           text-transform: uppercase;
           letter-spacing: 1px;
           color: var(--accent);
           background-color: var(--primary);
-          padding: 6px 14px;
+          padding: 5px 12px;
           border-radius: 30px;
-          margin-bottom: 24px;
+          margin-bottom: 16px;
         }
 
         .landing-wrap .hero h1 {
-          font-size: 3.5rem;
+          font-size: clamp(2.2rem, 5vw, 3.5rem);
           line-height: 1.15;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
         }
 
         .landing-wrap .hero h1 .accent {
@@ -208,20 +210,20 @@ export default function LandingHeroContent() {
         .landing-wrap .tagline {
           font-family: var(--font-sans);
           font-weight: 600;
-          font-size: 1.25rem;
+          font-size: clamp(1rem, 2vw, 1.25rem);
           color: var(--primary-light);
-          margin-bottom: 12px;
+          margin-bottom: 10px;
         }
 
         .landing-wrap .desc {
-          font-size: 1.1rem;
+          font-size: clamp(0.95rem, 1.5vw, 1.1rem);
           color: var(--text-muted);
-          margin-bottom: 36px;
+          margin-bottom: 28px;
         }
 
         .landing-wrap .hero-actions {
           display: flex;
-          gap: 16px;
+          gap: 12px;
           flex-wrap: wrap;
         }
 
@@ -230,10 +232,12 @@ export default function LandingHeroContent() {
           display: flex;
           justify-content: center;
           align-items: center;
+          width: 100%;
         }
 
         .landing-wrap .hero-character-img {
-          max-width: 100%;
+          width: 100%;
+          max-width: 460px;
           height: auto;
           filter: drop-shadow(0 20px 30px rgba(45, 26, 71, 0.15));
           animation: gentle-float 6s ease-in-out infinite;
@@ -242,6 +246,58 @@ export default function LandingHeroContent() {
         @keyframes gentle-float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
+        }
+
+        /* TRUST & FORM SECTION */
+        .landing-wrap .trust-form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 50px;
+          align-items: flex-start;
+        }
+
+        .landing-wrap .trust-column h2 {
+          font-size: 2.2rem;
+          margin-bottom: 30px;
+          color: var(--primary);
+        }
+
+        .landing-wrap .trust-item {
+          display: flex;
+          gap: 18px;
+          align-items: flex-start;
+          margin-bottom: 24px;
+        }
+
+        .landing-wrap .trust-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background-color: var(--primary);
+          color: var(--accent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .landing-wrap .trust-icon svg { 
+          width: 22px; 
+          height: 22px; 
+        }
+
+        .landing-wrap .trust-item h4 {
+          font-family: var(--font-sans);
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: var(--primary);
+          margin-bottom: 4px;
+        }
+
+        .landing-wrap .trust-item p { 
+          font-size: 0.9rem; 
+          color: var(--text-muted);
+          margin: 0;
         }
 
         /* SERVICES GRID */
@@ -754,150 +810,57 @@ export default function LandingHeroContent() {
           transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
         }
 
-        /* TRUST MATRIX */
-        .landing-wrap .trust-form-grid {
-          display: grid;
-          grid-template-columns: 1.1fr 0.9fr;
-          gap: 60px;
-          align-items: start;
-        }
-
-        .landing-wrap .trust-item {
-          display: flex;
-          gap: 18px;
-          align-items: flex-start;
-          margin-bottom: 24px;
-        }
-
-        .landing-wrap .trust-icon {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background-color: var(--primary);
-          color: var(--accent);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .landing-wrap .trust-icon svg { width: 22px; height: 22px; }
-        .landing-wrap .trust-item h4 {
-          font-family: var(--font-sans);
-          font-size: 1.05rem;
-          font-weight: 600;
-          color: var(--primary);
-          margin-bottom: 4px;
-        }
-        .landing-wrap .trust-item p { font-size: 0.9rem; }
-        
-        .landing-wrap .trust-form-container {
-          background: #ffffff;
-          border: 1px solid var(--border);
-          padding: 32px;
-          border-radius: var(--radius-md);
-          box-shadow: var(--shadow-md);
-        }
-
-        /* ACADEMIC INTEGRITY STATEMENT */
-        .landing-wrap .integrity-section {
-          background: var(--primary);
-          padding: 70px 0;
-        }
-
-        .landing-wrap .integrity-inner {
-          max-width: 820px;
-          margin: 0 auto;
-          text-align: center;
-        }
-
-        .landing-wrap .integrity-inner h2 {
-          color: #ffffff;
-          font-size: 2rem;
-          margin-bottom: 14px;
-        }
-
-        .landing-wrap .integrity-inner .rule {
-          background-color: var(--accent);
-        }
-
-        .landing-wrap .integrity-inner > p {
-          color: #d8d2e4;
-          font-size: 1.05rem;
-          margin-bottom: 40px;
-        }
-
-        .landing-wrap .integrity-columns {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 30px;
-          text-align: left;
-        }
-
-        .landing-wrap .integrity-card {
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: var(--radius-md);
-          padding: 28px 26px;
-        }
-
-        .landing-wrap .integrity-card h4 {
-          font-family: var(--font-sans);
-          font-size: 1rem;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          margin-bottom: 16px;
-        }
-
-        .landing-wrap .integrity-card.do h4 { color: var(--accent); }
-        .landing-wrap .integrity-card.dont h4 { color: #e8a3a3; }
-
-        .landing-wrap .integrity-card ul {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .landing-wrap .integrity-card li {
-          color: #eae7f0;
-          font-size: 0.95rem;
-          line-height: 1.5;
-          padding-left: 24px;
-          position: relative;
-        }
-
-        .landing-wrap .integrity-card.do li::before {
-          content: "✓";
-          position: absolute;
-          left: 0;
-          color: var(--accent);
-          font-weight: 700;
-        }
-
-        .landing-wrap .integrity-card.dont li::before {
-          content: "✕";
-          position: absolute;
-          left: 0;
-          color: #e8a3a3;
-          font-weight: 700;
-        }
-
+        /* MEDIA QUERIES FOR RESPONSIVENESS */
         @media (max-width: 992px) {
-          .landing-wrap .hero-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-          .landing-wrap .hero-actions { justify-content: center; }
-          .landing-wrap .hero-image-container { max-width: 400px; margin: 0 auto; }
-          .landing-wrap .trust-form-grid { grid-template-columns: 1fr; gap: 40px; }
-          .landing-wrap .process-grid { grid-template-columns: 1fr; gap: 24px; }
-          .landing-wrap .process-step, .landing-wrap .process-step.span-3, .landing-wrap .process-step.span-2 { grid-column: span 1 !important; }
-          .landing-wrap .card-6-exact { flex-direction: column !important; }
-          .landing-wrap .domain-grid { grid-template-columns: repeat(2, 1fr); }
+          .landing-wrap .hero-grid { 
+            grid-template-columns: 1fr; 
+            gap: 30px; 
+            text-align: center; 
+          }
+          .landing-wrap .hero-content {
+            max-width: 100%;
+            margin: 0 auto;
+          }
+          .landing-wrap .hero-actions { 
+            justify-content: center; 
+          }
+          .landing-wrap .hero-image-container { 
+            max-width: 380px; 
+            margin: 0 auto; 
+          }
+          .landing-wrap .trust-form-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .landing-wrap .process-grid { 
+            grid-template-columns: 1fr; 
+            gap: 24px; 
+          }
+          .landing-wrap .process-step, 
+          .landing-wrap .process-step.span-3, 
+          .landing-wrap .process-step.span-2 { 
+            grid-column: span 1 !important; 
+          }
+          .landing-wrap .card-6-exact { 
+            flex-direction: column !important; 
+          }
+          .landing-wrap .card-6-col:first-child::after { 
+            display: none; 
+          }
+          .landing-wrap .domain-grid { 
+            grid-template-columns: repeat(2, 1fr); 
+          }
         }
 
         @media (max-width: 700px) {
-          .landing-wrap .integrity-columns { grid-template-columns: 1fr; }
           .landing-wrap .domain-grid { grid-template-columns: 1fr; }
+          .landing-wrap .services-cta { 
+            flex-direction: column; 
+            text-align: center; 
+          }
+          .landing-wrap .hero {
+            padding: 30px 0 50px 0;
+          }
         }
       `}</style>
 
@@ -1010,7 +973,7 @@ export default function LandingHeroContent() {
 
             <div className="services-cta">
               <p>Not sure which service you need? Talk to our research consultant</p>
-              <button data-target="custom-blank-section" className="btn btn-primary">
+              <button data-target="enquiry" className="btn btn-primary">
                 Consult with Experts
               </button>
             </div>
@@ -1346,10 +1309,12 @@ export default function LandingHeroContent() {
                 </div>
               </div>
 
-              <div className="faq-item">
-                <div className="faq-q">Can I request revisions after a chapter is delivered?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. Revisions are included as long as your original topic and research scope remain unchanged, you can refine chapters without additional cost.</p>
+              <div className="xml-faq-item">
+                <div className="faq-item">
+                  <div className="faq-q">Can I request revisions after a chapter is delivered?<span className="chev">⌄</span></div>
+                  <div className="faq-a">
+                    <p>Yes. Revisions are included as long as your original topic and research scope remain unchanged, you can refine chapters without additional cost.</p>
+                  </div>
                 </div>
               </div>
 
@@ -1391,121 +1356,82 @@ export default function LandingHeroContent() {
           </div>
         </section>
 
-        {/* ACADEMIC INTEGRITY STATEMENT */}
-        <section className="integrity-section" id="academic-integrity">
-          <div className="container integrity-inner">
-            <h2>Academic Integrity Commitment</h2>
-            <div className="rule"></div>
-            <p>Clearby Research provides guidance, consultation, and academic support to help researchers develop their work independently. Researchers remain responsible for their submissions, including the research, analysis, interpretation, and final written content.</p>
-
-            <div className="integrity-columns">
-              <div className="integrity-card do">
-                <h4>You Always</h4>
-                <ul>
-                  <li>Conduct your own research</li>
-                  <li>Write your own work</li>
-                  <li>Properly attribute all sources</li>
-                  <li>Follow your institution's academic integrity policies</li>
-                  <li>Disclose external guidance to your advisor as required</li>
-                </ul>
+        {/* WHY SCHOLARS TRUST CLEARBY RESEARCH & ENQUIRY FORM SECTION */}
+        <section className="section scroll-mt-24" id="enquiry" style={{ background: "var(--bg-alt)" }}>
+          <div className="container">
+            <div className="trust-form-grid">
+              
+              {/* Right Column: Contact Form */}
+              <div>
+                <ContactForm variant="hero" />
               </div>
-              <div className="integrity-card dont">
-                <h4>We Never</h4>
-                <ul>
-                  <li>Write dissertations, thesis, or assignments for you</li>
-                  <li>Remove or conceal plagiarism</li>
-                  <li>Help bypass institutional academic standards</li>
-                  <li>Produce work intended to deceive your institution</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
+              
+              {/* Left Column: Why Scholars Trust Clearby Research */}
+              <div className="trust-column">
+                <h2>Why Scholars Trust Clearby Research</h2>
+                
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div>
+                    <h4>PhD Qualified Mentors</h4>
+                    <p>Work directly with subject-matter experts who hold doctoral degrees.</p>
+                  </div>
+                </div>
 
-        {/* TRUST + ENQUIRY SECTION */}
-        <section className="section" id="enquiry">
-          <div className="container trust-form-grid">
-            <div className="trust-content-left">
-              <h2 style={{ marginBottom: "28px" }}>Why Scholars Trust Clearby Research</h2>
-               
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  <div>
+                    <h4>Timely Deliverables</h4>
+                    <p>Strict adherence to academic deadlines and university timelines.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>PhD Qualified Mentors</h4>
-                  <p>Work directly with subject-matter experts who hold doctoral degrees.</p>
-                </div>
-              </div>
 
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div>
+                    <h4>Confidential Integrity</h4>
+                    <p>Your intellectual property is protected by strict NDAs.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Timely Deliverables</h4>
-                  <p>Strict adherence to academic deadlines and university timelines.</p>
-                </div>
-              </div>
 
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                  </div>
+                  <div>
+                    <h4>Plagiarism Verification</h4>
+                    <p>Turnitin reports provided with every final document.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Confidential Integrity</h4>
-                  <p>Your intellectual property is protected by strict NDAs.</p>
-                </div>
-              </div>
 
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div>
+                    <h4>Unlimited Revisions</h4>
+                    <p>Continuous support until your supervisor provides approval.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Plagiarism Verification</h4>
-                  <p>Turnitin reports provided with every final document.</p>
-                </div>
-              </div>
 
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12 3 7.582 7.03 4 12 4s9 3.582 9 8z" />
-                  </svg>
+                <div className="trust-item">
+                  <div className="trust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <h4>Journal Indexing</h4>
+                    <p>Strategic guidance for Scopus, WoS, and IEEE publications.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Unlimited Revisions</h4>
-                  <p>Continuous support until your supervisor provides approval.</p>
-                </div>
-              </div>
 
-              <div className="trust-item">
-                <div className="trust-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7 7 7M12 3v18" />
-                  </svg>
-                </div>
-                <div>
-                  <h4>Journal Indexing</h4>
-                  <p>Strategic guidance for Scopus, WoS, and IEEE publications.</p>
-                </div>
               </div>
             </div>
-
-            {/* Replaced Inline Form with the Reusable ContactForm Component */}
-            <div className="trust-form-container">
-              <ContactForm variant="hero" />
-            </div>
-
           </div>
         </section>
 
