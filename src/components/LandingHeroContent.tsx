@@ -4,20 +4,14 @@ import { useState, useEffect } from "react";
 import ContactForm from "@/components/ContactForm";
 
 export default function LandingHeroContent() {
-  useEffect(() => {
-    // FAQ Accordion Handler
-    const faqItems = document.querySelectorAll(".faq-item");
-    faqItems.forEach((item) => {
-      const question = item.querySelector(".faq-q");
-      if (question) {
-        question.addEventListener("click", () => {
-          const isActive = item.classList.contains("active");
-          faqItems.forEach((innerItem) => innerItem.classList.remove("active"));
-          if (!isActive) item.classList.add("active");
-        });
-      }
-    });
+  // State to track which FAQ is currently open
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  useEffect(() => {
     // Smooth Scroll Handler for data-target buttons
     const handleScroll = (e: Event) => {
       const target = e.currentTarget as HTMLElement;
@@ -42,6 +36,50 @@ export default function LandingHeroContent() {
       });
     };
   }, []);
+
+  // FAQ Data extracted for clean React mapping
+  const faqs = [
+    {
+      q: "What Does PhD Thesis Guidance Include?",
+      a: "Our PhD thesis support includes guidance on developing a structured thesis plan, conducting and reviewing literature, selecting appropriate research methodology, understanding data analysis, organizing chapters, academic editing and formatting, plagiarism and similarity review, and preparing for the viva."
+    },
+    {
+      q: "What information do I need to provide to get started?",
+      a: "You'll need to share your research topic, research proposal, and details of the requirement, university formatting guidelines, any data already collected, and relevant notes or literature you've gathered. This lets our expert scope the project accurately before writing begins."
+    },
+    {
+      q: "Do you deliver original and plagiarism-free content?",
+      a: "Yes. All research documents are developed specifically for your project based on your research objectives, methodology, and data. Before delivery, the content undergoes originality checks to help ensure academic integrity, and a plagiarism report can be provided upon request."
+    },
+    {
+      q: "Do you follow my University's formatting guidelines?",
+      a: "Yes. We follow your institution's specified guidelines and the content follows citation style (APA, MLA, Harvard, IEEE, or Chicago) and chapter structure exactly as required."
+    },
+    {
+      q: "Can I request revisions after a chapter is delivered?",
+      a: "Yes. Revisions are included as long as your original topic and research scope remain unchanged, you can refine chapters without additional cost."
+    },
+    {
+      q: "Do you provide only data analysis support for the thesis?",
+      a: "Yes. Scholars can choose chapter-wise or service-specific support, including SPSS analysis, AMOS SEM, SmartPLS, NVivo thematic analysis, and interpretation of results."
+    },
+    {
+      q: "Which software do you use for PhD data analysis?",
+      a: "We provide analysis support using SPSS, AMOS, SmartPLS, STATA, R, Python, EViews, MATLAB, and NVivo."
+    },
+    {
+      q: "Do you support international PhD scholars?",
+      a: "Yes. We provide research support for scholars from India, the UK, UAE, Australia, Canada, Europe, and other countries, following university-specific guidelines."
+    },
+    {
+      q: "Is my research kept confidential?",
+      a: "Absolutely. All research discussions, documents, datasets, and communications are handled with strict confidentiality and professional ethics."
+    },
+    {
+      q: "Can you help with Scopus or WOS publication?",
+      a: "Yes. We provide guidance on journal selection, manuscript preparation, and submission strategy for Scopus-indexed and Web of Science journals."
+    }
+  ];
 
   return (
     <>
@@ -163,23 +201,22 @@ export default function LandingHeroContent() {
           transform: translateY(-2px);
         }
 
-        /* HERO */
+        /* HERO - BLENDED BACKGROUND LAYOUT */
         .landing-wrap .hero {
-          background: linear-gradient(135deg, var(--bg-alt) 0%, #ffffff 100%);
-          padding: 40px 0 60px 0;
+          position: relative;
+          background: linear-gradient(to right, rgba(253, 253, 253, 1) 0%, rgba(253, 253, 253, 0.9) 45%, rgba(253, 253, 253, 0) 100%), 
+                      url('/herobg.png') no-repeat center right / cover;
+          padding: 120px 0 140px 0;
           overflow: hidden;
-        }
-
-        .landing-wrap .hero-grid {
-          display: grid;
-          grid-template-columns: 1.1fr 0.9fr;
-          gap: 40px;
+          display: flex;
           align-items: center;
+          min-height: 85vh;
         }
 
         .landing-wrap .hero-content {
-          max-width: 580px;
+          max-width: 600px;
           width: 100%;
+          text-align: left;
         }
 
         .landing-wrap .eyebrow {
@@ -193,13 +230,14 @@ export default function LandingHeroContent() {
           background-color: var(--primary);
           padding: 5px 12px;
           border-radius: 30px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
         }
 
         .landing-wrap .hero h1 {
-          font-size: clamp(2.2rem, 5vw, 3.5rem);
+          font-size: clamp(2.4rem, 4.5vw, 3.8rem);
           line-height: 1.15;
-          margin-bottom: 16px;
+          margin-bottom: 18px;
+          color: var(--primary);
         }
 
         .landing-wrap .hero h1 .accent {
@@ -212,40 +250,20 @@ export default function LandingHeroContent() {
           font-weight: 600;
           font-size: clamp(1rem, 2vw, 1.25rem);
           color: var(--primary-light);
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
         .landing-wrap .desc {
-          font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+          font-size: clamp(1rem, 1.5vw, 1.15rem);
           color: var(--text-muted);
-          margin-bottom: 28px;
+          margin-bottom: 32px;
         }
 
         .landing-wrap .hero-actions {
           display: flex;
           gap: 12px;
           flex-wrap: wrap;
-        }
-
-        .landing-wrap .hero-image-container {
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .landing-wrap .hero-character-img {
-          width: 100%;
-          max-width: 460px;
-          height: auto;
-          filter: drop-shadow(0 20px 30px rgba(45, 26, 71, 0.15));
-          animation: gentle-float 6s ease-in-out infinite;
-        }
-
-        @keyframes gentle-float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          justify-content: flex-start;
         }
 
         /* TRUST & FORM SECTION */
@@ -812,21 +830,18 @@ export default function LandingHeroContent() {
 
         /* MEDIA QUERIES FOR RESPONSIVENESS */
         @media (max-width: 992px) {
-          .landing-wrap .hero-grid { 
-            grid-template-columns: 1fr; 
-            gap: 30px; 
-            text-align: center; 
+          .landing-wrap .hero {
+            background: linear-gradient(to right, rgba(253, 253, 253, 0.95) 0%, rgba(253, 253, 253, 0.85) 100%), 
+                        url('/herobg.png') no-repeat center right / cover;
+            padding: 80px 0;
+            text-align: center;
           }
           .landing-wrap .hero-content {
-            max-width: 100%;
             margin: 0 auto;
+            text-align: center;
           }
           .landing-wrap .hero-actions { 
             justify-content: center; 
-          }
-          .landing-wrap .hero-image-container { 
-            max-width: 380px; 
-            margin: 0 auto; 
           }
           .landing-wrap .trust-form-grid {
             grid-template-columns: 1fr;
@@ -858,16 +873,13 @@ export default function LandingHeroContent() {
             flex-direction: column; 
             text-align: center; 
           }
-          .landing-wrap .hero {
-            padding: 30px 0 50px 0;
-          }
         }
       `}</style>
 
       <div className="landing-wrap">
         {/* HERO */}
         <section className="hero">
-          <div className="container hero-grid">
+          <div className="container">
             <div className="hero-content">
               <span className="eyebrow">🎓 Accredited PhD Research Mentorship</span>
               <h1>
@@ -885,13 +897,6 @@ export default function LandingHeroContent() {
                   View Services
                 </button>
               </div>
-            </div>
-            <div className="hero-image-container">
-              <img
-                src="https://static.wixstatic.com/media/480369_bc4b11b6be144232a25dab3d15f4ec7f~mv2.png"
-                alt="Doctoral Researcher Mentorship"
-                className="hero-character-img"
-              />
             </div>
           </div>
         </section>
@@ -1281,77 +1286,20 @@ export default function LandingHeroContent() {
               <div className="rule"></div>
             </div>
             <div className="faq-wrap" id="faqWrap">
-              <div className="faq-item">
-                <div className="faq-q">What Does PhD Thesis Guidance Include?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Our PhD thesis support includes guidance on developing a structured thesis plan, conducting and reviewing literature, selecting appropriate research methodology, understanding data analysis, organizing chapters, academic editing and formatting, plagiarism and similarity review, and preparing for the viva.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">What information do I need to provide to get started?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>You'll need to share your research topic, research proposal, and details of the requirement, university formatting guidelines, any data already collected, and relevant notes or literature you've gathered. This lets our expert scope the project accurately before writing begins.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Do you deliver original and plagiarism-free content?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. All research documents are developed specifically for your project based on your research objectives, methodology, and data. Before delivery, the content undergoes originality checks to help ensure academic integrity, and a plagiarism report can be provided upon request.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Do you follow my University's formatting guidelines?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. We follow your institution's specified guidelines and the content follows citation style (APA, MLA, Harvard, IEEE, or Chicago) and chapter structure exactly as required.</p>
-                </div>
-              </div>
-
-              <div className="xml-faq-item">
-                <div className="faq-item">
-                  <div className="faq-q">Can I request revisions after a chapter is delivered?<span className="chev">⌄</span></div>
+              {faqs.map((faq, index) => (
+                <div 
+                  key={index} 
+                  className={`faq-item ${activeFaq === index ? "active" : ""}`}
+                >
+                  <div className="faq-q" onClick={() => toggleFaq(index)}>
+                    {faq.q}
+                    <span className="chev">⌄</span>
+                  </div>
                   <div className="faq-a">
-                    <p>Yes. Revisions are included as long as your original topic and research scope remain unchanged, you can refine chapters without additional cost.</p>
+                    <p>{faq.a}</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Do you provide only data analysis support for the thesis?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. Scholars can choose chapter-wise or service-specific support, including SPSS analysis, AMOS SEM, SmartPLS, NVivo thematic analysis, and interpretation of results.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Which software do you use for PhD data analysis?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>We provide analysis support using SPSS, AMOS, SmartPLS, STATA, R, Python, EViews, MATLAB, and NVivo.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Do you support international PhD scholars?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. We provide research support for scholars from India, the UK, UAE, Australia, Canada, Europe, and other countries, following university-specific guidelines.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Is my research kept confidential?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Absolutely. All research discussions, documents, datasets, and communications are handled with strict confidentiality and professional ethics.</p>
-                </div>
-              </div>
-
-              <div className="faq-item">
-                <div className="faq-q">Can you help with Scopus or WOS publication?<span className="chev">⌄</span></div>
-                <div className="faq-a">
-                  <p>Yes. We provide guidance on journal selection, manuscript preparation, and submission strategy for Scopus-indexed and Web of Science journals.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
