@@ -234,9 +234,9 @@ export default function HeaderClient({
       {mobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl max-h-[85vh] overflow-y-auto px-6 py-6 space-y-4 z-50">
           <Link 
-            href="/phd-thesis-guidance-and-research-support" 
+            href="/" 
             onClick={() => setMobileMenuOpen(false)} 
-            className={`block text-sm font-semibold py-1 ${isActive("/phd-thesis-guidance-and-research-support") ? "text-brand-purple font-bold" : "text-gray-800 hover:text-brand-purple"}`}
+            className={`block text-sm font-semibold py-1 ${isActive("/") ? "text-brand-purple font-bold" : "text-gray-800 hover:text-brand-purple"}`}
           >
             Home
           </Link>
