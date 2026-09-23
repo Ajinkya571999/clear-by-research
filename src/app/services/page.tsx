@@ -83,7 +83,7 @@ export default async function ServicesPage() {
           <h2 className="text-3xl font-serif font-bold text-white">
             Not sure which service you need? Talk to our consultants.
           </h2>
-          <Link href="/consultation" className="bg-brand-gold text-brand-purple font-bold py-3 px-8 rounded-sm hover:opacity-90 transition whitespace-nowrap">
+          <Link href="/contact" className="bg-brand-gold text-brand-purple font-bold py-3 px-8 rounded-sm hover:opacity-90 transition whitespace-nowrap">
             Schedule a Free Consultation →
           </Link>
         </div>

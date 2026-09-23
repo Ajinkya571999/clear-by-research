@@ -30,7 +30,7 @@ interface ServiceData {
     data: { feature: string; generic: string; clearby: string }[];
   };
   faqs?: { q: string; a: string }[];
-  internalLinks?: { anchor: string; url: string }[];
+  
   ctaSection: {
     title: string;
     text: string;
@@ -76,7 +76,7 @@ async function getService(slug: string): Promise<ServiceData | null> {
     subServices: data.sub_services || [],
     comparisonSection: data.comparison_section,
     faqs: data.faqs || [],
-    internalLinks: data.internal_links || [],
+    
     ctaSection: data.cta_section || { title: "Ready to Get Started?", text: "Connect with our experts today.", buttonText: "Enquire Now" },
   };
 }
@@ -206,26 +206,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       {/* 5. FAQ SECTION (INTERACTIVE DROPDOWN ACCORDION) */}
       <FaqAccordion faqs={service.faqs} />
 
-      {/* 6. INTERNAL LINKS */}
-      {service.internalLinks && service.internalLinks.length > 0 && (
-        <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-light border-t border-gray-200">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-brand-purple mb-12 text-center">Supporting Research Services</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {service.internalLinks.map((link: any, idx: number) => (
-                <Link
-                  key={idx}
-                  href={link.url}
-                  className="bg-white p-5 border border-gray-200 rounded-sm shadow-sm hover:border-brand-gold transition block"
-                >
-                  <span className="text-sm font-bold text-brand-purple">{link.anchor}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* 7. BOTTOM CTA */}
       <section className="w-full py-20 bg-brand-purple text-white px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">
@@ -233,7 +213,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <p className="text-gray-300 text-sm max-w-xl mx-auto mb-8 leading-relaxed">
             {service.ctaSection.text}
           </p>
-          <a href="#contact" className="bg-brand-gold text-brand-purple font-bold py-3.5 px-8 rounded-sm hover:opacity-90 transition inline-block text-xs uppercase tracking-wider shadow-md">
+          <a href="/contact" className="bg-brand-gold text-brand-purple font-bold py-3.5 px-8 rounded-sm hover:opacity-90 transition inline-block text-xs uppercase tracking-wider shadow-md">
             {service.ctaSection.buttonText} <ArrowRight className="inline ml-1 w-4 h-4" />
           </a>
         </div>

@@ -409,10 +409,43 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-serif font-bold text-brand-purple text-center mb-12">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {faqs.map((q, idx) => (
+            {[
+              {
+                q: "What's the difference between Clearby's 'guidance' and 'writing services'?",
+                a: "We coach you to do better work; we don't do the work for you. You maintain full authorship, stay engaged with your research, and develop skills you'll use throughout your career. Writing services do the opposite."
+              },
+              {
+                q: "Will my thesis be approved?",
+                a: "We can't guarantee approval—that's your professor's decision. But our guidance significantly improves approval likelihood. 92% of our clients' theses are approved on first submission. Our role is to make your research as strong as possible."
+              },
+              {
+                q: "How much does PhD thesis consultation cost?",
+                a: "Services range from $100-300 per hour depending on discipline and consultant expertise. Many students budget $2K-5K total for full-thesis guidance (vs. $10K-15K for writing services). First consultation is free."
+              },
+              {
+                q: "Can you help if I'm already partially through my thesis?",
+                a: "Absolutely. Many students engage us mid-journey when they're stuck. We can jump in at any stage—topic, proposal, methodology, data analysis, or chapter revision. There's no penalty for joining mid-stream."
+              },
+              {
+                q: "How is this different from working with my academic advisor?",
+                a: "Your advisor oversees your research. We specialize in coaching the writing, methodology, and research skills. Many students work with both—their advisor ensures academic fit; we ensure quality execution."
+              },
+              {
+                q: "Do you work with students from outside India?",
+                a: "Yes. We serve doctoral scholars from 20+ countries across multiple time zones. Our flexible, asynchronous model works for international students. Language support available for non-native English speakers."
+              },
+              {
+                q: "Is this actually ethical?",
+                a: "Yes. University guidelines permit consultants who provide guidance and feedback on student work. What's not permitted is completing work for students, submitting work under their name, or plagiarism. We do none of those things."
+              },
+              {
+                q: "How quickly will I see results?",
+                a: "Depends on your starting point. Most students report clarity improvements within 2-3 consultations. Thesis timeline improvements vary: 1-3 months for topic/proposal clarity; 2-6 months for methodology validation; 3-12 months for full-thesis improvement."
+              }
+            ].map((faq, idx) => (
               <div key={idx} className="border border-gray-200 rounded-sm bg-brand-light overflow-hidden transition-all">
                 <button onClick={() => toggleFaq(idx)} className="w-full px-6 py-4 text-left font-serif font-bold text-brand-purple flex justify-between items-center text-sm">
-                  <span>{q}</span>
+                  <span>{faq.q}</span>
                   <span className="text-brand-gold">{openFaq === idx ? "▲" : "▼"}</span>
                 </button>
                 {openFaq === idx && (
@@ -421,7 +454,7 @@ export default function HomePage() {
                     animate={{ opacity: 1, height: "auto" }}
                     className="px-6 pb-4 text-xs text-gray-600 leading-relaxed border-t border-gray-200 pt-3"
                   >
-                    Clearby Research provides professional academic guidance, mentoring, and structural editing support while ensuring you maintain 100% authorship and integrity over your academic work.
+                    {faq.a}
                   </motion.div>
                 )}
               </div>
