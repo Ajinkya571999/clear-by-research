@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/ContactForm";
 import { LampContainer } from "@/components/ui/lamp";
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const router = useRouter();
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -37,7 +38,7 @@ export default function HomePage() {
 
   const facultyList = [
     {
-      name: "Dr. Prem Sisodiya",
+      name: "Dr. Ramkrishnan Raman",
       title: "PhD in Quantative Analysis, Stanford University",
       experience: "14+ Years Academic Experience",
       specs: ["Qualitative Research Design", "Literature Synthesis & Analysis", "Theoretical Framework Development"],
@@ -55,21 +56,6 @@ export default function HomePage() {
       specs: ["Systematic Review Protocols", "Critical Discourse Analysis", "Narrative Synthesis"],
     },
   ];
-
-  const faqs = [
-    "What's the difference between Clearby's 'guidance' and 'writing services?",
-    "Will my thesis be approved?",
-    "How much does PhD thesis consultation cost?",
-    "Can you help if I'm already partially through my thesis?",
-    "How is this different from working with my academic advisor?",
-    "Do you work with students from outside India?",
-    "Is this actually ethical?",
-    "How quickly will I see results?",
-  ];
-
-  const filteredServices = activeCategory === "All"
-    ? servicesList
-    : servicesList.filter(srv => srv.category === activeCategory || srv.title === "Explore our services");
 
   return (
     <main className="flex flex-col w-full bg-brand-light text-brand-dark overflow-x-hidden">
@@ -165,17 +151,19 @@ export default function HomePage() {
           <p className="text-gray-600 text-sm">Structured guidance across every phase of your research journey.</p>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Pills - Redirects to /services with query params */}
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center items-center gap-3 mb-16">
           {categories.map((cat, idx) => (
             <button
               key={idx}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all duration-300 border ${
-                activeCategory === cat
-                  ? 'bg-brand-purple text-white border-brand-purple shadow-md scale-105'
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-brand-purple hover:text-brand-purple'
-              }`}
+              onClick={() => {
+                if (cat === "All") {
+                  router.push('/services');
+                } else {
+                  router.push(`/services?category=${encodeURIComponent(cat)}`);
+                }
+              }}
+              className="px-5 py-2.5 rounded-full text-xs font-semibold transition-all duration-300 border bg-white text-gray-700 border-gray-300 hover:border-brand-purple hover:text-brand-purple hover:scale-105"
             >
               {cat}
             </button>
@@ -183,7 +171,7 @@ export default function HomePage() {
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredServices.map((srv, idx) => (
+          {servicesList.map((srv, idx) => (
             <motion.div 
               key={idx}
               initial={{ opacity: 0, y: 20 }}
@@ -193,10 +181,7 @@ export default function HomePage() {
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="bg-white p-8 border border-gray-200 shadow-sm hover:shadow-xl transition rounded-sm flex flex-col justify-between"
             >
-              <div>{/* <div className="w-10 h-10 bg-brand-light text-brand-gold flex items-center justify-center rounded mb-6 font-bold text-lg">
-                  {srv.icon || "💡"}
-                </div> */}
-                
+              <div>
                 <h3 className="text-xl font-serif font-bold text-brand-purple mb-3">{srv.title}</h3>
                 <p className="text-xs text-gray-600 mb-6 leading-relaxed">{srv.desc}</p>
               </div>
@@ -216,10 +201,10 @@ export default function HomePage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-purple mb-8">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-brand-purple mb-8 leading-tight">
               Why Choose E-Clearby Research for Your PhD Research Guidance
             </h2>
-            <div className="space-y-6 text-sm text-gray-700">
+            <div className="space-y-6 text-base md:text-lg text-gray-700">
               {[
                 "Expert PhD Thesis Consultants with 11+ Years of Experience",
                 "Academic Integrity-First Approach to Thesis Guidance",
@@ -227,8 +212,8 @@ export default function HomePage() {
                 "Affordable Dissertation Consultation Services",
                 "Fast-Track PhD Completion with Strategic Guidance"
               ].map((item, i) => (
-                <div key={i} className="border-b border-gray-200 pb-4 flex items-center gap-3 transition-colors hover:text-brand-purple">
-                  <span className="text-brand-gold font-bold">✓</span> {item}
+                <div key={i} className="border-b border-gray-200 pb-5 flex items-center gap-3.5 transition-colors hover:text-brand-purple font-medium">
+                  <span className="text-brand-gold font-bold text-xl">✓</span> {item}
                 </div>
               ))}
             </div>
@@ -239,7 +224,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="bg-white p-4 border border-gray-200 shadow-sm rounded-sm"
           >
-            <img src="Why-Choose.png" alt="Clearby Research Why-Choose" />
+            <img src="Why-Choose.png" alt="Clearby Research Why-Choose" className="w-full h-auto object-cover" />
           </motion.div>
         </div>
       </section>
@@ -248,16 +233,16 @@ export default function HomePage() {
       <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-light">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="bg-white p-4 border border-gray-200 shadow-sm rounded-sm">
-            <img src="About.png" alt="Clearby Research About" />
+            <img src="About.png" alt="Clearby Research About" className="w-full h-auto object-cover" />
           </div>
           <div>
-            <h2 className="text-3xl font-serif font-bold text-brand-purple mb-6">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-brand-purple mb-6 leading-tight">
               About E-Clearby Research Consulting Pvt Ltd
             </h2>
-            <p className="text-gray-600 text-sm leading-relaxed mb-4">
+            <p className="text-gray-700 text-base md:text-lg leading-relaxed mb-6">
               In the world of academia, research is the foundation upon which knowledge is built and innovations are forged. However, the path to successful research — especially at advanced levels such as PhDs — can be an arduous and intricate journey. This is where E-Clearby Research Consulting Pvt. Ltd. emerges as a beacon of expertise and support, dedicated to guiding scholars toward academic excellence.
             </p>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-700 text-base md:text-lg leading-relaxed">
               As trusted PhD Topics Consultants, we help you select a research direction that is original and achievable; through expert guidance in Thesis Writing, we support you in structuring and strengthening your own work chapter by chapter.
             </p>
           </div>
@@ -271,29 +256,31 @@ export default function HomePage() {
           <div className="w-20 h-0.5 bg-brand-gold mx-auto mt-3"></div>
         </div>
         
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          <div className="lg:col-span-7 space-y-6 text-sm text-gray-700">
-            {[
-              { title: "1. Academic Integrity is Non-Negotiable:", desc: "All guidance maintains university plagiarism standards. No shortcuts, no academic dishonesty. Your work represents your authentic research." },
-              { title: "2. You Maintain Full Authorship:", desc: "You write your thesis; we provide feedback. We never write for you or submit work in your name. Your intellectual contributions remain 100% yours." },
-              { title: "3. Our Role is Advisory Only:", desc: "We guide your thinking, not replace it. We coach you to do better work, not do it for you. We're like having an expert mentor, not a co-author." },
-              { title: "4. Transparent Process:", desc: "Clear expectations from day one. What we will and won't do, spelled out. Regular check-ins to ensure alignment with your goals." },
-              { title: "5. University Compliance:", desc: "We follow all university guidelines. Our services don't violate academic policies. We prepare students for legitimate academic success." }
-            ].map((promise, i) => (
-              <div key={i} className="flex items-start gap-3.5 pb-6 border-b border-gray-200">
-                <span className="text-brand-gold text-lg mt-0.5 flex-shrink-0">✓</span>
-                <div>
-                  <p className="font-bold text-brand-purple mb-1">{promise.title}</p>
-                  <p className="text-xs text-gray-600 leading-relaxed">{promise.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="lg:col-span-5 bg-white p-3 border border-gray-200 shadow-sm rounded-sm">
-            <img src="/Promises.png" alt="Clearby Research Promises" className="w-full h-auto object-cover rounded-sm" />
-          </div>
+       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+  <div className="lg:col-span-7 space-y-8 text-gray-700"> {/* Increased vertical space between items */}
+    {[
+      { title: "1. Academic Integrity is Non-Negotiable:", desc: "All guidance maintains university plagiarism standards. No shortcuts, no academic dishonesty. Your work represents your authentic research." },
+      { title: "2. You Maintain Full Authorship:", desc: "You write your thesis; we provide feedback. We never write for you or submit work in your name. Your intellectual contributions remain 100% yours." },
+      { title: "3. Our Role is Advisory Only:", desc: "We guide your thinking, not replace it. We coach you to do better work, not do it for you. We're like having an expert mentor, not a co-author." },
+      { title: "4. Transparent Process:", desc: "Clear expectations from day one. What we will and won't do, spelled out. Regular check-ins to ensure alignment with your goals." },
+      { title: "5. University Compliance:", desc: "We follow all university guidelines. Our services don't violate academic policies. We prepare students for legitimate academic success." }
+    ].map((promise, i) => (
+      <div key={i} className="flex items-start gap-4 pb-6 border-b border-gray-200"> {/* Increased gap for larger font alignment */}
+        <span className="text-brand-gold text-xl mt-0.5 shrink-0">✓</span> {/* Increased checkmark size */}
+        <div>
+          {/* Increased title font size from default to text-lg */}
+          <p className="font-bold text-brand-purple text-lg mb-1.5">{promise.title}</p>
+          {/* Increased description font size from text-xs to text-sm */}
+          <p className="text-sm text-gray-600 leading-relaxed">{promise.desc}</p>
         </div>
+      </div>
+    ))}
+  </div>
+
+  <div className="lg:col-span-5 bg-white p-3 border border-gray-200 shadow-sm rounded-sm">
+    <img src="/Promises.png" alt="Clearby Research Promises" className="w-full h-auto object-cover rounded-sm" />
+  </div>
+</div>
       </section>
 
       {/* 7. 8-STAGE GUIDANCE PROCESS */}
@@ -370,27 +357,60 @@ export default function HomePage() {
 
       {/* 9. ACADEMIC SUBJECTS */}
       <section className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-brand-light">
-        <div className="max-w-7xl mx-auto mb-16">
+        <div className="max-w-7xl mx-auto mb-16 flex flex-col items-center text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-purple mb-4">
-            Academic Subjects & Disciplines We Specialize In
+            PhD Research Guidance Across Academic Disciplines
           </h2>
-          <div className="w-full h-[1px] bg-brand-gold/60"></div>
+          <div className="w-24 h-0.5 bg-brand-gold mx-auto mb-6"></div>
+          <p className="text-gray-600 text-sm md:text-base max-w-4xl mx-auto leading-relaxed">
+            We provide ethical research guidance, consultation, and academic support to doctoral scholars and researchers across a wide range of disciplines—from business and engineering to health sciences, social sciences, life sciences, humanities, and technology.
+          </p>
         </div>
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-12 text-sm">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-12">
           {[
-            { title: "Business & Management", items: ["MBA Thesis", "Marketing Research", "Organizational Behavior", "Strategic Management", "Business Analytics"] },
-            { title: "Engineering & Technology", items: ["Software Engineering", "Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Data Science & AI"] },
-            { title: "Healthcare & Medical", items: ["Medical Education", "Nursing Research", "Public Health", "Clinical Research", "Biomedical Sciences"] },
-            { title: "Social Sciences & Education", items: ["Psychology", "Sociology", "Education", "Political Science", "Anthropology"] },
-            { title: "Science & Environment", items: ["Environmental Science", "Biology", "Chemistry", "Physics", "Sustainable Development"] },
-            { title: "Humanities & Literature", items: ["English Literature", "History", "Philosophy", "Languages & Linguistics", "Cultural Studies"] }
+            { 
+              title: "Business, Management & Commerce", 
+              items: ["Business Administration", "Marketing", "Finance & Accounting", "Human Resource Management", "Organizational Behavior", "Economics"] 
+            },
+            { 
+              title: "Engineering & Technology", 
+              items: ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Electronics & Communication", "Chemical Engineering", "Robotics & Automation"] 
+            },
+            { 
+              title: "Computer Science, Data & AI", 
+              items: ["Computer Science", "Information Technology", "Data Science", "Artificial Intelligence & Machine Learning", "Cybersecurity", "Information Systems"] 
+            },
+            { 
+              title: "Medical, Nursing & Allied Health", 
+              items: ["Medicine", "Nursing", "Public Health", "Pharmacy", "Physiotherapy", "Biomedical Sciences"] 
+            },
+            { 
+              title: "Life Sciences & Biotechnology", 
+              items: ["Biotechnology", "Microbiology", "Biochemistry", "Genetics", "Molecular Biology", "Bioinformatics"] 
+            },
+            { 
+              title: "Science & Environment", 
+              items: ["Mathematics", "Statistics", "Physics", "Chemistry", "Environmental Science", "Sustainable Development"] 
+            },
+            { 
+              title: "Social Sciences & Education", 
+              items: ["Psychology", "Sociology", "Economics", "Political Science", "Education", "Social Work"] 
+            },
+            { 
+              title: "Humanities, Languages & Literature", 
+              items: ["English Literature", "History", "Philosophy", "Linguistics", "Languages", "Cultural Studies"] 
+            },
+            { 
+              title: "Law, Policy & Governance", 
+              items: ["Law", "Public Administration", "Public Policy", "Governance", "Criminology", "International Relations"] 
+            }
           ].map((col, idx) => (
             <div key={idx}>
-              <h4 className="font-serif font-bold text-brand-purple mb-4 uppercase tracking-wider text-xs">
+              <h4 className="font-serif font-bold text-brand-purple mb-4 uppercase tracking-wider text-sm md:text-base">
                 {col.title}
               </h4>
-              <ul className="space-y-2.5 text-gray-600 text-xs">
+              <ul className="space-y-3 text-gray-700 text-sm">
                 {col.items.map((item, i) => (
                   <li key={i} className="hover:text-brand-purple transition-colors">· {item}</li>
                 ))}
@@ -399,7 +419,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-200 text-xs italic text-gray-600">
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-200 text-sm italic text-gray-600 text-center">
           Can't find your discipline? We work across 40+ academic fields. <Link href="/contact" className="text-brand-gold font-semibold not-italic hover:underline">Contact us</Link> to discuss your specialized area.
         </div>
       </section>
@@ -462,7 +482,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
 
       {/* 11. FINAL BOTTOM CTA BANNER WITH LAMP EFFECT */}
       <LampContainer>
